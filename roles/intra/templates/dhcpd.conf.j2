@@ -1,0 +1,36 @@
+# dhcpd.conf(5)
+
+log-facility local7;
+
+authoritative;
+
+option domain-name "meetin.gs";
+option domain-name-servers {{ intranet.hosts | join(', ') }};
+
+ddns-updates on;
+ddns-update-style interim;
+ignore client-updates;
+update-static-leases on;
+
+default-lease-time 86400;
+max-lease-time 604800;
+
+include "/etc/dhcp/ddns.key";
+
+zone meetin.gs. {
+  primary 127.0.0.1;
+  key DDNS_UPDATE;
+}
+
+zone 1.168.192.in-addr.arpa. {
+  primary 127.0.0.1;
+  key DDNS_UPDATE;
+}
+
+subnet 192.168.1.0 netmask 255.255.255.0 {
+  range 192.168.1.129 192.168.1.254;
+  option subnet-mask 255.255.255.0;
+  option broadcast-address 192.168.1.255;
+  option routers {{ intranet.routers | join(', ') }};
+  option interface-mtu {{ intranet.mtu }};
+}

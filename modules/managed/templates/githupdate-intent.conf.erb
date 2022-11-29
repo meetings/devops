@@ -1,0 +1,21 @@
+# githupdate - signal <%= @intent %> hosts to upgrade themselves
+#
+# Run a script to verify, select and signal <%= @intent %>
+# continuous integration hosts to upgrade.
+
+description "signal <%= @intent %> hosts to upgrade themselves"
+
+task
+
+start on githupdate-<%= @intent %>
+
+script
+  set -e
+  FIFO=`mktemp --dry-run`
+  mkfifo $FIFO
+  (logger -t githupdate -p local0.info <$FIFO &)
+  exec 2> $FIFO
+  exec > $FIFO
+  rm $FIFO
+  exec /usr/local/sbin/githupdate.sh <%= @filters %>
+end script

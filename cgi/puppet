@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -eu
+
+cd /etc/puppet
+
+cat > /dev/null
+
+echo Content-Type: text/plain
+echo
+
+if [ $(git rev-parse --abbrev-ref HEAD) == "master" ]; then
+  sudo git reset --hard HEAD
+  sudo git pull --all
+  sudo logger -t webhook -p local0.info "master branch updated"
+else
+  sudo git fetch --all
+  sudo logger -t webhook -p local0.info "fetched all branches"
+fi

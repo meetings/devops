@@ -1,0 +1,17 @@
+# /etc/autodeploy.conf
+# Configuration for autodeployment and service updates.
+
+export INTENT=<%= @intent %>
+export ROLE=<%= @role %>
+export RANK=<%= @rank %>
+<%- if @dir -%>
+export DIR=<%= @dir %>
+<%- else -%>
+export DIR=/opt/meetings/$INTENT
+<%- end -%>
+export URL="<%= @url %>"
+export PREFIX=/usr/local
+export DEPLOYDIR=autodeploy
+export RUNDIR=/run/$INTENT
+export VERSIONFILE=$RUNDIR/version
+export LOCKFILE=$RUNDIR/githupdate.lock

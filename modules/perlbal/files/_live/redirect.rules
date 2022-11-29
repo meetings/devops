@@ -1,0 +1,211 @@
+### HTTP redirection configuration
+### vi: set syntax=perl :
+
+
+### Random hacks for Meetin.gs
+
+# Zuckerberg is an idiot and parses bitly links so that they lose www prefix
+s%^(\w+:)//meetin\.gs(:80|:443)?(/201\d/.*)%307:$1//www.meetin.gs$3% && next;
+
+# Google needed this to verify that we own the domain
+s%^(\w+:)//meetin\.gs(:80|:443)?(/googlea7f43bde75fd953e\.html.*|/y_key_f5e4474a78f51956\.html.*)%http://10.0.0.1:20038$3% && next;
+
+# Someone linked to dev from public. Trying to mitigate.
+s%^(\w+:)//dev\.meetin\.gs(:80|:443)?/meetings/wizard(/|\?| )(.*)%307:https://meetin.gs/meetings/wizard$3$4% && next;
+
+
+### Combined blog & front website
+
+s%^(\w+:)//www\.meetin\.gs(:80|:443)?/meet( .*|/.*)%307:http://meetin.gs/meet$3% && next;
+s%^(\w+:)//(?:www\.)?meetin\.gs(:80|:443)?/meetings/my_meet_me(/| )(.*)%307:https://meetin.gs/meetings/meetme_config/% && next;
+s%^(\w+:)//(?:www\.)?meetin\.gs(:80|:443)?/mobile(/| )(.*)%307:http://www.meetin.gs/% && next;
+s%^(\w+:)//(?:www\.)?meetin\.gs(:80|:443)?/promo(/| )(.*)%307:http://www.meetin.gs/pricing/promo/% && next;
+s%^(\w+:)//(?:www\.)?meetin\.gs(:80|:443)?/organize(/| )(.*)%307:https://meetin.gs/meetings/wizard/% && next;
+s%^(\w+:)//blog\.meetin\.gs(:80|:443)?(/.*$| .*$)%307:http://www.meetin.gs/blog$3% && next;
+s%^(\w+:)//faq\.meetin\.gs(:80|:443)?(/.*$| .*$)%307:https://meetings.zendesk.com/hc/% && next;
+s%^(\w+:)//signup\.meetin\.gs(:80|:443)?( .*|/.*)%307:http://meetin.gs/meetings/wizard/% && next;
+s%^(\w+:)//meetin\.gs(:80|:443)?(/index.html |/robots.txt |/(?:blog|press|about|features|pricing|promo)/? |/ | )%307:http://www.meetin.gs$3% && next;
+s%^(\w+:)//gecko\.meetin\.gs(:80|:443)?( .*|/.*)%http://10.0.0.1:20166$3% && next;
+
+# Support links per language
+s%^(\w+:)//support\.meetin\.gs(:80|:443)?/nl.*%307:$1//www.meetin.gs/nl/ondersteuning/% && next;
+s%^(\w+:)//support\.meetin\.gs(:80|:443)?/sv.*%307:$1//www.meetin.gs/sv/supporter/% && next;
+s%^(\w+:)//support\.meetin\.gs(:80|:443)?/fi.*%307:$1//www.meetin.gs/fi/tuki/% && next;
+s%^(\w+:)//support\.meetin\.gs.*%307:$1//www.meetin.gs/support/% && next;
+
+# Then we actually serve all kinds of fancy pages from different servers
+s%^(\w+://www\.meetin\.gs(:80|:443)?(/nomobile[\S]*|/custom\-static[\S]*))%$1 websites% && next;
+s%^(\w+://old\.meetin\.gs(:80|:443)?[\S]*)%$1 websites% && next;
+
+# Platform api gw
+s%^((\w+:)//platform\.meetin\.gs(:80|:443)?)/apigw(/[^\s]*)?( .*|$)%$1/platform$4 live_api$5% && next;
+s%^((\w+:)//platform\-beta\.meetin\.gs(:80|:443)?)/apigw(/[^\s]*)?( .*|$)%$1/platform$4 beta_api$5% && next;
+s%^((\w+:)//platform\-dev\.meetin\.gs(:80|:443)?)/apigw(/.*$)%$2//10.0.0.1:20080/platform$4% && next;
+
+# "Building an imperium" (Jussi)
+s%^(\w+://platform\.meetin\.gs(:80|:443)?[\S]*)%$1 websites% && next;
+s%^(\w+://platform\-beta\.meetin\.gs(:80|:443)?[\S]*)%$1 websites% && next;
+s%^(\w+://platform\-dev\.meetin\.gs(:80|:443)?[\S]*)%$1 websites% && next;
+
+# Pagelines does the fronts work
+s%^(\w+:)//www\.meetin\.gs(:80|:443)?(/.*$| .*$)%http://10.0.0.1:29990$3% && next;
+
+
+### A separate site for the matchmaking promotions, app and new site
+
+s%^(\w+:)//matchmaking\.meetin\.gs(:80|:443)?(/.*$| .*$)%http://10.0.0.1:29990$3% && next;
+s%^(\w+:)//chrome\.meetin\.gs(:80|:443)?(/.*$| .*$)%http://10.0.0.1:29990$3% && next;
+s%^(\w+:)//meetingsapp\.com(:80|:443)?(/.*$| .*$)%http://10.0.0.1:29990$3% && next;
+s%^(\w+://versions\.meetin\.gs(:80|:443)?[\S]*)%$1 websites% && next;
+s%^https://(sites\.meetin\.gs(:80|:443)?[\S]*)%http://$1 websites% && next;
+s%^http://(sites\.meetin\.gs(:80|:443)?[\S]*)%301:https://$1% && next;
+
+
+### Separate sites for event registration hacks
+
+s%^(\w+:)//register\-to\-slush\.meetin\.gs(:80|:443)?(/.*$| .*$)%http://10.0.0.1:29990$3% && next;
+s%^(\w+:)//register\.meetin\.gs(:80|:443)?(/.*$| .*$)%http://10.0.0.1:29990$3% && next;
+
+### Separate mobile sites for all tiers and extra testing
+
+# New mobile (and force https)
+s%^https://(mobile\.meetin\.gs(:80|:443)?[\S]*)%http://$1 websites% && next;
+s%^https://(mobiledev\.meetin\.gs(:80|:443)?[\S]*)%http://$1 websites% && next;
+s%^https://(mobilebeta\.meetin\.gs(:80|:443)?[\S]*)%http://$1 websites% && next;
+s%^http://(mobile\.meetin\.gs.*)%301:https://$1% && next;
+s%^http://(mobiledev\.meetin\.gs.*)%301:https://$1% && next;
+s%^http://(mobilebeta\.meetin\.gs.*)%301:https://$1% && next;
+
+# Old mobile
+s%^(\w+://m\.meetin\.gs(:80|:443)?[\S]*)%$1 websites% && next;
+s%^(\w+://mdev\.meetin\.gs(:80|:443)?[\S]*)%$1 websites% && next;
+s%^(\w+://mbeta\.meetin\.gs(:80|:443)?[\S]*)%$1 websites% && next;
+
+# Random mobile testing
+s%^(\w+:)//mjussi\.meetin\.gs(:80|:443)?(/.*$| .*$)%http://10.0.0.1:31337$3% && next;
+s%^(\w+:)//mkapseli\.meetin\.gs(:80|:443)?(/.*$| .*$)%http://10.0.0.1:20143$3% && next;
+
+
+### API
+
+# The way they are intended to be used
+s%^((\w+:)//api\.meetin\.gs(:80|:443)?(/[^\s]*|))%$1 live_api% && next;
+s%^((\w+:)//api\-staging\.meetin\.gs(:80|:443)?(/[^\s]*|))%$1 beta_api% && next;
+s%^((\w+:)//api\-beta\.meetin\.gs(:80|:443)?(/[^\s]*|))%$1 beta_api% && next;
+s%^(\w+:)//api\-dev\.meetin\.gs(:80|:443)?(.*$)%$1//10.0.0.1:20080$3% && next;
+
+# And the way desktop clients use them because IE sucks
+s%^(\w+:)//[^/]*dev\.meetin\.gs(:80|:443)?/apigw(/.*$)%$1//10.0.0.1:20080$3% && next;
+s%^(\w+:)//[^/]*dev\-staging\.meetin\.gs(:80|:443)?/apigw(.*$)%$1//10.0.0.1:20080$3% && next;
+s%^((\w+:)//((?:[^/]*\-)?staging\.meetin\.gs)(:80|:443)?)/apigw(/[^\s]*)?( .*|$)%$1$5 beta_api$6% && next;
+s%^((\w+:)//((?:[^/]*\-)?beta\.meetin\.gs)(:80|:443)?)/apigw(/[^\s]*)?( .*|$)%$1$5 beta_api$6% && next;
+s%^((\w+:)//((?:[^/]*\.)?meetin\.gs)(:80|:443)?)/apigw(/[^\s]*)?( .*|$)%$1$5 live_api$6% && next;
+
+
+### Misc
+
+# Event self access
+s%^(\w+:)//dev\-events\.meetin\.gs(:80|:443)?(/.*$)%$1//10.0.0.1:20036$3% && next;
+s%^(\w+:)//live\-events\-1\.meetin\.gs(:80|:443)?(/.*$)%$1//10.0.0.1:20066$3% && next;
+s%^(\w+:)//live\-events\-2\.meetin\.gs(:80|:443)?(/.*$)%$1//10.0.0.1:20067$3% && next;
+
+# A separate site for tracking
+s%^(\w+://track\.meetin\.gs(:80|:443)?[\S]*)%$1 websites% && next;
+s%^(\w+://track\-dev\.meetin\.gs(:80|:443)?[\S]*)%$1 websites% && next;
+
+# URL cache services
+s%^((\w+:)//urlcache\.meetin\.gs(:80|:443)?[\S]*)%$1 live_urlcache% && next;
+
+# Cutycapt as a service
+s%^(\w+://cuty\.meetin\.gs(:80|:443)?[\S]*)%$1 live_cuty% && next;
+s%^(\w+://cuty\.dicole\.net(:80|:443)?[\S]*)%$1 live_cuty% && next;
+
+# Package repository
+s%^(\w+:)//ubuntu\.meetin\.gs/(.*$)%http://10.0.0.1:29988/ubuntu/$2% && next;
+
+# ELK stack
+s%^(\w+:)//kibana\.meetin\.gs/(.*$)%http://10.0.0.1:20073/$2% && next;
+
+
+# Separate meetings_raw and draft_attachment paths to the legacy beta-dcp
+# (because they might use ffmpeg). Then, all the rest should go to the
+# beta_http pool
+s%^(\w+:)//(?:[^/]*\-)?beta\.meetin\.gs(:80|:443)?/meetings_raw(.*$)%$1//10.0.0.1:20076/meetings_raw$3% && next;
+s%^(\w+:)//(?:[^/]*\-)?beta\.meetin\.gs(:80|:443)?/draft_attachment(.*$)%$1//10.0.0.1:20076/draft_attachment$3% && next;
+s%^(\w+://(?:[^/]*\-)?beta\.meetin\.gs(:80|:443)?/\S*) (.*)%$1 beta_http $3% && next;
+s%^(\w+:)//[^/]*dev\.meetin\.gs(:80|:443)?(.*$)%$1//10.0.0.1:20028$3% && next;
+
+# Main servers have some folders to go through varnish and if they need
+# to be reloaded, they go through the pool again to ensure availability
+s%^((\w+:)//((uncached\.)meetin\.gs)(:80|:443)?(/[^\s]*|))%$1 dicolenet% && next;
+s%^((\w+:)//((?:[^/]*\.)?meetin\.gs)(:80|:443)?((?:/js/|/css/|/images/).*))%http://127.0.0.1:8080$5% && next;
+
+# Some special urls go to new http stack but others fall back to the old
+s%^((\w+:)//((?:[^/]*\.)?meetin\.gs)(:80|:443)?(/meetings_appdirect[^\s]*)?)( .*|$)%$1 live_http$6% && next;
+s%^((\w+:)//((?:[^/]*\.)?meetin\.gs)(:80|:443)?(/[^\s]*)?)( .*|$)%$1 dicolenet$6% && next;
+
+### We want mtn.gs to redirect somewhere proper too
+s%^(\w+:)//www\.mtn\.gs(:80|:443)?(/index.html .*|/ .*| .*)%307:http://www.meetin.gs$3% && next;
+
+### FIXME What is this?
+s%^(\w+:)//mtn\.gs(:80|:443)?.*%http://mtn.gs/ websites% && next;
+
+
+###
+### Swipe to Meet
+###
+s%^(\w+:)//(?:www\.)?sw2\.me(:80|:443)?(/index.html .*|/ .*| .*)%307:http://swipetomeet.com$3% && next;
+s%^https?://sw2.me(:\d+)?/(\S*) (.*)%http://meetin.gs/meetings_raw/longify_url/$2 dicolenet $3% && next;
+s%^https?://b.sw2.me(:\d+)?/(\S*) (.*)%http://beta.meetin.gs/meetings_raw/longify_url/$2 beta_http $3% && next;
+
+s%^https?://d.sw2.me(:\d+)?/(.*)%http://10.0.0.1:20028/meetings_raw/longify_url/$2% && next;
+
+
+###
+###
+### Event servers
+###
+###
+
+
+s%^(\w+://events\.meetin\.gs(:80|:443)?/\S*)%$1 live_events% && next;
+s%^(\w+://events\.dicole\.net(:80|:443)?(/[^\s]*|))%$1 live_events% && next;
+s%^(\w+://event\-server\-\d+\.dicole\.net(:80|:443)?(/[^\s]*|))%$1 live_events% && next;
+
+# FIXME Are these in actual use?
+s%^(\w+:)//events\-staging\.dicole\.net(:80|:443)?(/.*$)%$1//10.0.0.1:20036$3% && next;
+s%^(\w+:)//event\-server\-\d+\-staging\.dicole\.net(:80|:443)?(/.*$)%$1//10.0.0.1:20036$3% && next;
+s%^(\w+:)//events\-beta\.dicole\.net(:80|:443)?(/.*$)%$1//10.0.0.1:20036$3% && next;
+s%^(\w+:)//event\-server\-\d+\-beta\.dicole\.net(:80|:443)?(/.*$)%$1//10.0.0.1:20036$3% && next;
+s%^(\w+:)//events\-dev\.dicole\.net(:80|:443)?(/.*$)%$1//10.0.0.1:20036$3% && next;
+s%^(\w+:)//event\-server\-\d+\-dev\.dicole\.net(:80|:443)?(/.*$)%$1//10.0.0.1:20036$3% && next;
+
+
+###
+###
+### Used by Meetin.gs operations from the Dicole namespace too
+###
+###
+
+# Kapseli test server
+s%^(\w+:)//kapseli\.dicole\.net(:80|:443)?(/.*$| .*$)%http://10.0.0.1:20142$3% && next;
+
+# The statistics server
+s%^(\w+:)//meetingstats\.dicole\.(net)(:80|:443)?/(.*$)%$1//10.0.0.1:20092/$4% && next;
+
+
+# Puppetmaster
+s%^(\w+:)//puppetmaster\.dicole\.net(:\d+)?(/.*|$)%http://10.0.0.1:20111$3% && next;
+
+# Perlbal management
+s%^(\w+:)//perlbal\.dicole\.net(:\d+)?(/.*|$)%http://127.0.0.1:60000$3% && next;
+
+
+
+### Fallback redirects
+
+# Make sure *.dicole.* gets redirected with path
+s%^(\w+:)//(www.)?dicole.(net|fi|com|org)(:80|:443)?(/.*$|$)%307:http://www.dicole.com$5% && next;
+
+# Fallback to www.dicole.com
+s%.*%307:http://www.dicole.com/% && next;

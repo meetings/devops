@@ -1,0 +1,8 @@
+{
+    shared_secret    => 'x',
+    event_source_url => 'http://meetin.gs/event_source_gateway',
+    nudge_me_url     => 'http://<%= @hostname %>.meetin.gs/nudge',
+<%- if @peer_url -%>
+    peer_url         => '<%= @peer_url %>'
+<%- end -%>
+}

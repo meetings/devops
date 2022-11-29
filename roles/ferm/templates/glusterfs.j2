@@ -1,0 +1,5 @@
+# Allow GlusterFS peers to communicate
+
+table filter chain INPUT {
+  proto tcp dport 24007 ACCEPT;
+}

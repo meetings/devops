@@ -1,0 +1,9 @@
+# /etc/cron.d/api_restart
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+<%= scope.function_fqdn_rand([30]) %> 0 * * *  root  service data-api restart &>/dev/null || echo data-api restart failed

@@ -1,0 +1,6 @@
+---
+- name: restart nginx
+  service: name=nginx state=restarted
+
+- name: enable webgui
+  service: name=bloonix-webgui enabled=yes state=restarted

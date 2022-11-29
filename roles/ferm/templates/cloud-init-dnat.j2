@@ -1,0 +1,5 @@
+# Redirect magic cloud-init address to network service host.
+
+table nat chain PREROUTING {
+  proto tcp daddr 169.254.169.254 DNAT to {{ intranet.cloudinit_source | default('192.168.1.17') }};
+}

@@ -1,0 +1,8 @@
+---
+- name: restore rc.local
+  copy:
+    mode: 0644
+    owner: root
+    group: root
+    src: rc.local
+    dest: /etc/rc.local

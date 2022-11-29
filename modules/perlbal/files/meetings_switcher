@@ -1,0 +1,12 @@
+# /etc/cron.d/dcp_switcher
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+5,20,35,50  * * * *  root  /usr/local/sbin/dp 2
+6,21,36,51  * * * *  root  /usr/local/sbin/dp 12
+10,25,40,55 * * * *  root  /usr/local/sbin/dp 1
+11,26,41,56 * * * *  root  /usr/local/sbin/dp 12

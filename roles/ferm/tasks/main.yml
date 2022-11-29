@@ -1,0 +1,22 @@
+---
+- name: create configuration directory
+  file:
+    mode: 0700
+    state: directory
+    path: /etc/ferm/conf.d
+
+- name: copy main configuration
+  copy:
+    mode: 0600
+    src: ferm.conf
+    dest: /etc/ferm/ferm.conf
+  notify: update ferm
+
+- name: add custom configuration
+  template:
+    mode: 0600
+    src: "{{ item }}.j2"
+    dest: "/etc/ferm/conf.d/{{ item }}.ferm"
+  with_items: "{{ with_ferm | default([]) }}"
+  when: with_ferm is defined
+  notify: update ferm

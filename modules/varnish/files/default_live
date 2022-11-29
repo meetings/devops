@@ -1,0 +1,33 @@
+# /etc/default/varnish
+# Configuration for varnishd(1) init scripts.
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+#
+# Varnish init script expects variables DAEMON_OPTS, NFILES
+# and MEMLOCK to be set.
+
+# Start at boot.
+START=yes
+
+# Maximum number of open files.
+NFILES=131072
+
+# Maximum locked memory size. Increasing log size also
+# requires more of this.
+MEMLOCK=82000
+
+# Varnish instance name.
+INSTANCE=$(uname -n)
+
+# -a  Listen address:port
+# -f  Configuration file
+# -T  Administration interface
+# -S  Secret for administration
+# -s  Storage type and options
+#
+DAEMON_OPTS="-a 127.0.0.1:8080,127.0.0.2:7500,127.0.0.3:7500,127.0.0.6:7500,127.0.0.7:7500 \
+             -f /etc/varnish/default.vcl \
+             -S /etc/varnish/secret \
+             -T 127.0.0.1:6082 \
+             -s malloc,128M"

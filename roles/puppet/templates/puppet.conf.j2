@@ -1,0 +1,13 @@
+[main]
+  server={{ puppetmaster_addr }}
+  rundir=/run/puppet
+  vardir=/var/lib/puppet
+  logdir=/var/log/puppet
+  ssldir=/var/lib/puppet/ssl
+  factpath=$vardir/lib/facter
+  prerun_command=/etc/puppet/etckeeper-commit-pre
+  postrun_command=/etc/puppet/etckeeper-commit-post
+
+[master]
+  ssl_client_header=SSL_CLIENT_S_DN
+  ssl_client_verify_header=SSL_CLIENT_VERIFY

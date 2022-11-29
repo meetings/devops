@@ -1,0 +1,30 @@
+---
+- name: download and update cloud image cache
+  hosts: virthosts
+  become: true
+
+  vars:
+    qcow2_filename: "{{ ansible_date_time.date }}-xenial-server-amd64.qcow2"
+
+  handlers:
+  - name: convert qcow2 to raw
+    command: >
+      qemu-img convert -O raw {{ qcow2_filename }} {{ virt.image_path }}
+    args:
+      chdir: "{{ virt.image_cache }}"
+
+  tasks:
+  - name: create image cache directory
+    file:
+      state: directory
+      path: "{{ virt.image_cache }}"
+
+  - name: download cloud image
+    get_url:
+      checksum: "sha1:{{ virt.cloud_image_sha1 }}"
+      url: "{{ virt.cloud_image_url }}"
+      dest: "{{ virt.image_cache }}/{{ qcow2_filename }}"
+    register: download
+    notify: convert qcow2 to raw
+
+  - debug: var=download

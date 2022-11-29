@@ -1,0 +1,58 @@
+---
+- name: turn off translations
+  copy:
+    dest: /etc/apt/apt.conf.d/99translations
+    content: >
+      Acquire::Languages "none";
+
+- name: configure main sources.list
+  template:
+    src: sources.list.j2
+    dest: /etc/apt/sources.list
+
+- name: add Meetin.gs package signing key
+  apt_key:
+    id: 066C8430
+    data: "{{ lookup('file', 'meetin.gs.pub') }}"
+  when: with_meetings is defined
+
+- name: configure Meetin.gs repository
+  template:
+    src: meetin.gs.list.j2
+    dest: /etc/apt/sources.list.d/meetin.gs.list
+  when: with_meetings is defined
+
+- name: configure custom repositories
+  template:
+    src: "{{ item.name }}.list.j2"
+    dest: "/etc/apt/sources.list.d/{{ item.name }}.list"
+  with_items: "{{ with_repositories | default([]) }}"
+  when: with_repositories is defined
+
+- name: include package signing keys
+  apt_key: id={{ item.id }} url={{ item.url }}
+  with_items: "{{ with_repositories | default([]) }}"
+  when: with_repositories is defined
+
+- name: upgrade package index
+  apt: update_cache=yes
+  when: not ansible_check_mode
+
+- name: install packages from backports
+  apt:
+    state: latest
+    name: "{{ item.pkg }}"
+    default_release: "{{ item.target }}"
+  ignore_errors: "{{ ansible_check_mode }}"
+  with_items: "{{ with_backports | default([]) }}"
+  when: with_backports is defined
+
+- name: install base packages
+  apt: name={{ item }}
+  with_items: "{{ baseline_packages }}"
+
+- name: install host specific packages
+  apt: name={{ item }}
+  ignore_errors: "{{ ansible_check_mode }}"
+  with_items: "{{ custom_packages | default([]) }}"
+  when: custom_packages is defined

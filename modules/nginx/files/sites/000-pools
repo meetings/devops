@@ -1,0 +1,69 @@
+upstream bloggingfi_pool {
+    server 10.0.0.1:20038;
+}
+
+upstream legacy_media_pool {
+    server 10.0.0.1:29988;
+}
+
+upstream cuty_pool {
+    server 10.0.0.1:20222;
+    server 10.0.0.1:20223;
+}
+
+upstream live_wpmu_pool {
+    server 10.0.0.1:29979;
+}
+
+upstream live_blog_pool {
+    server 10.0.0.1:29990;
+}
+
+upstream live_api_pool {
+    server 10.0.0.1:20175;
+    server 10.0.0.1:20177;
+}
+
+upstream beta_api_pool {
+    server 10.0.0.1:20053;
+    server 10.0.0.1:20055;
+}
+
+upstream dev_api_pool {
+    server 10.0.0.1:20080;
+}
+
+upstream puppetmaster_pool {
+    server 10.0.0.1:20111;
+}
+
+upstream urlcache_pool {
+    server 10.0.0.1:20175;
+    server 10.0.0.1:20177;
+}
+
+upstream websites_pool {
+    server 10.0.0.1:20069;
+    server 10.0.0.1:20071;
+}
+
+upstream events_pool {
+    server 10.0.0.1:20066;
+    server 10.0.0.1:20067;
+}
+
+upstream beta_events_pool {
+    server 10.0.0.1:20036;
+}
+
+upstream dev_events_pool {
+    server 10.0.0.1:20036;
+}
+
+upstream beta_dcp_core_pool {
+    server 10.0.0.1:20076;
+}
+
+upstream dev_dcp_core_pool {
+    server 10.0.0.1:20028;
+}

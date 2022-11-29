@@ -1,0 +1,45 @@
+server {
+    listen 80;
+    server_name mtn.gs;
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://websites_pool;
+    }
+}
+
+server {
+    listen 80;
+    listen 443;
+
+    ssl_certificate     /etc/ssl/private/dicolenet.pem;
+    ssl_certificate_key /etc/ssl/private/dicolenet.pem;
+
+    server_name wb.dicole.net media.dicole.net epad.dicole.net;
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://websites_pool;
+    }
+}
+
+server {
+    listen 80;
+    listen 443;
+
+    ssl_certificate     /etc/ssl/private/meetings.pem;
+    ssl_certificate_key /etc/ssl/private/meetings.pem;
+
+    server_name versions.meetin.gs sites.meetin.gs mobile.meetin.gs mobiledev.meetin.gs mobilebeta.meetin.gs m.meetin.gs mdev.meetin.gs mbeta.meetin.gs;
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://websites_pool;
+    }
+}

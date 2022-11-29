@@ -1,0 +1,13 @@
+### Defaults for perlbal initscript.
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+
+PERLBAL_ENABLE=true
+
+# Naming a user is required, group is optional.
+#
+USER=root
+#GROUP=www-data
+
+#EXTRA_OPTS=

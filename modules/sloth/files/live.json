@@ -1,0 +1,17 @@
+{
+  "db": "sqlite",
+
+  "dbopt": {
+    "database_file": "/var/lib/gearsloth/tasks.sqlite",
+    "poll_interval": "999"
+  },
+
+  "servers": [{
+    "host": "localhost",
+    "port": "4730"
+  },
+  {
+    "host": "localhost",
+    "port": "4731"
+  }]
+}

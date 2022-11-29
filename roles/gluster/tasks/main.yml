@@ -1,0 +1,44 @@
+---
+- name: create a dedicated filesystem
+  filesystem:
+    fstype: ext4
+    opts: -L glusterfs
+    dev: "{{ glusterfs.partition }}"
+
+- name: mount dedicated filesystem
+  mount:
+    state: mounted
+    fstype: ext4
+    src: LABEL=glusterfs
+    name: /srv/glusterfs
+
+- name: create a directory for the volume
+  file:
+    state: directory
+    path: /srv/glusterfs/vol0
+
+- name: probe peers ## FIXME with a custom module
+  run_once: true
+  command: >
+    gluster peer probe {{ item }}
+  register: probe
+  with_items: "{{ glusterfs.peers }}"
+
+- debug: var=probe
+
+- name: create volume
+  run_once: true
+  gluster_volume:
+    name: vol0
+    state: present
+    start_on_create: true
+    replicas: 2
+    bricks: /srv/glusterfs/vol0
+    cluster: "{{ glusterfs.peers }}"
+
+- name: mount glusterfs volume
+  mount:
+    state: mounted
+    fstype: glusterfs
+    src: "{{ facter_fqdn }}:/vol0"
+    name: "{{ wordpress.root }}"

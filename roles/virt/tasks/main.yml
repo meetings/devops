@@ -1,0 +1,26 @@
+---
+- name: remove default network
+  virt_net:
+    name: default
+    state: absent
+
+- name: create openvswitch virtual network
+  virt_net:
+    name: "{{ virt.net_name }}"
+    command: define
+    xml: "{{ lookup('template', 'templates/ovs-libvirt-network.xml.j2') }}"
+
+- name: activate virtual network
+  virt_net: name="{{ virt.net_name }}" state=active
+
+- name: autostart virtual network
+  virt_net: name="{{ virt.net_name }}" autostart=yes
+
+- name: create libvirt pool
+  virt_pool:
+    name: "{{ virt.pool_name }}"
+    command: define
+    xml: "{{ lookup('template', 'templates/zfs-libvirt-pool.xml.j2') }}"
+
+- name: autostart libvirt pool
+  virt_pool: name="{{ virt.pool_name }}" autostart=yes

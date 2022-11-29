@@ -1,0 +1,9 @@
+# /etc/cron.d/meetings_services
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+<%= @restart_time %>  root  /usr/local/bin/restart_lighttpd.sh

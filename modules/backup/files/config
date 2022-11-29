@@ -1,0 +1,40 @@
+Host live-blog-1
+  Port 20000
+  User backup
+  HostName gateway.dicole.com
+Host live-blog-2
+  Port 20005
+  User backup
+  HostName gateway.dicole.com
+
+Host legacy-media-1
+  Port 20013
+  User backup
+  HostName gateway.dicole.com
+Host legacy-media-2
+  Port 20015
+  User backup
+  HostName gateway.dicole.com
+
+Host live-mogile-1
+  Port 20039
+  User backup
+  HostName gateway.dicole.com
+Host live-mogile-2
+  Port 20040
+  User backup
+  HostName gateway.dicole.com
+
+Host dev-mogile-1
+  Port 20117
+  User backup
+  HostName gateway.dicole.com
+Host dev-mogile-2
+  Port 20119
+  User backup
+  HostName gateway.dicole.com
+
+Host dev-dcp
+  Port 20027
+  User root
+  HostName gateway.dicole.com

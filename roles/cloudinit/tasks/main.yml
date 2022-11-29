@@ -1,0 +1,25 @@
+---
+- name: remove default index
+  file:
+    state: absent
+    path: /var/www/html
+
+- name: copy cloud-init source data
+  copy:
+    mode: 0644
+    src: www
+    dest: /var
+
+- name: configure nginx
+  copy:
+    mode: 0644
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+  notify: restart nginx
+
+- name: configure cloud-init site
+  copy:
+    mode: 0644
+    src: default
+    dest: /etc/nginx/sites-available/default
+  notify: restart nginx

@@ -1,0 +1,35 @@
+# /etc/apache2/sites-available/default
+#
+# Apache site configuratio for serving .deb packages and receiving Github
+# Webhooks.
+#
+# This configuration makes Apache listen to port 80 and allows executing of
+# cgi scripts. The idea is to have a simple cgi script, which takes Github
+# webhooks and updates git repositories if needed.
+
+<VirtualHost *:80>
+    DocumentRoot /var/www
+    ScriptAlias  /cgi/ /etc/puppet/cgi/
+    ServerAdmin  puppetmaster@dicole.com
+
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    ErrorLog  ${APACHE_LOG_DIR}/error.log
+    LogLevel  warn
+
+    <Directory />
+        Options None
+        AllowOverride None
+    </Directory>
+    <Directory /var/www/>
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+    <Directory "/etc/puppet/cgi/">
+        Options +ExecCGI -MultiViews
+        AllowOverride None
+        Order allow,deny
+        Allow from 127.0.0.1
+    </Directory>
+</VirtualHost>

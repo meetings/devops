@@ -1,0 +1,19 @@
+# Configuration for cloud-init data source
+# vim: set ft=nginx :
+
+server {
+  server_name _;
+  listen 80 default_server;
+
+  root /var/www;
+  index index.txt;
+
+  location / {
+    try_files $uri $uri/ =404;
+  }
+
+  location /2009-04-04/user-data {
+    default_type text/cloud-config;
+    try_files $uri =404;
+  }
+}

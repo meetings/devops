@@ -1,0 +1,5 @@
+# Allow domain name queries
+
+table filter chain INPUT {
+  proto (tcp udp) dport 53 ACCEPT;
+}

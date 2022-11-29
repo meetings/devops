@@ -1,0 +1,6 @@
+---
+- name: reconfigure timezone
+  command: /usr/sbin/dpkg-reconfigure -f noninteractive tzdata
+
+- name: set timezone
+  command: /usr/bin/timedatectl set-timezone Etc/UTC

@@ -1,0 +1,27 @@
+---
+- name: set up Meetin.gs intranet services host
+  hosts: "{{ vm_name }}"
+  become: true
+
+  roles:
+  - role: hostname
+  - role: apt
+  - role: ferm
+  - role: intra
+  - role: cloudinit
+  - role: postfix
+  - role: puppet
+
+  handlers:
+  - name: extract oui.txt
+    command: >
+      gunzip --keep oui.txt.gz
+    args:
+      chdir: /usr/local/etc
+
+  tasks:
+  - name: download IEEE OUI data
+    get_url:
+      url: http://linuxnet.ca/ieee/oui.txt.gz
+      dest: /usr/local/etc/oui.txt.gz
+    notify: extract oui.txt

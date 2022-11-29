@@ -1,0 +1,20 @@
+---
+- name: set up puppetmaster
+  hosts: puppet
+  become: true
+
+  roles:
+  - role: hostname
+  - role: apt
+  - role: ferm
+  - role: postfix
+
+  # FIXME If this is *everything* that this playbook does, this
+  # can safely be replaced with utilize-and-puppetize.yml and
+  # some documentation.
+  tasks:
+  - name:
+    lineinfile:
+      regexp: "^(.)?. .etc.default.locale"
+      line: ". /etc/default/locale"
+      dest: /etc/apache2/envvars

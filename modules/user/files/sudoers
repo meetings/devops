@@ -1,0 +1,17 @@
+# /etc/sudoers
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+#
+# See sudoers(5) for details.
+
+Defaults  env_reset
+Defaults  mail_badpass
+Defaults  secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+
+root ALL=(ALL:ALL) ALL
+
+# Don't let the syntax fool you. The #include below
+# is not a comment, but an actual directive.
+#
+#includedir /etc/sudoers.d

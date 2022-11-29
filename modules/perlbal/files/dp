@@ -1,0 +1,20 @@
+#!/bin/sh
+
+for I in dcp live_http beta_http; do
+  SRC=/run/pool/${I}_${1}.pool
+  POOL=/run/pool/${I}.pool
+
+  [ -n "$1" -a -f $SRC ] && cp -f $SRC $POOL
+
+  NGINX_POOL_NAME=${I}_core_pool
+  NGINX_POOL_FILE=`echo ${NGINX_POOL_NAME} | perl -pe 's/_/-/g'`
+  NGINX_POOL_PATH=/etc/nginx/sites-available/000-${NGINX_POOL_FILE}
+
+  echo "upstream $NGINX_POOL_NAME {" > $NGINX_POOL_PATH
+  perl -pe 's/(.*)/    server $1;/' $POOL >> $NGINX_POOL_PATH
+  echo "}" >> $NGINX_POOL_PATH
+
+  /usr/bin/tty -s && cat $POOL
+done
+
+/usr/sbin/nginx -s reload

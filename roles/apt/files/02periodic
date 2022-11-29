@@ -1,0 +1,11 @@
+# What is this?
+#APT::Periodic::MaxAge "31";
+
+# Not set, but what is default?
+#APT::Periodic::Verbose "0";
+
+# In cloud image, this is already set
+#APT::Periodic::Unattended-Upgrade "1";
+
+# In cloud image, this is already set
+#APT::Periodic::Update-Package-Lists "1";

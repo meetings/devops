@@ -1,0 +1,9 @@
+# /root/.ssh/config
+#
+# Host alias for Meetin.gs Deployer.
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+
+Host github.com
+    IdentityFile /root/.ssh/deployer

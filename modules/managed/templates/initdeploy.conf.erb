@@ -1,0 +1,45 @@
+# autodeploy - deploy and update automatically at startup
+#
+# Upstart task to automatically deploy a missing service or
+# update an existing one.
+
+description "Deploy and update a service"
+author      "Tuomas Starck <tuomas@meetin.gs>"
+
+task
+
+<%- if @auto -%>
+start on (local-filesystems and net-device-up IFACE!=lo)
+<%- else -%>
+start on smoke-signal
+<%- end -%>
+
+script
+  set -e
+  FIFO=`mktemp --dry-run`
+  mkfifo $FIFO
+  (logger -t autodeploy -p local0.info <$FIFO &)
+  exec 2> $FIFO
+  exec > $FIFO
+  rm $FIFO
+
+  . /etc/autodeploy.conf
+
+  BASEDIR=`dirname $DIR`
+
+  if [ ! -d $BASEDIR ]; then
+    mkdir -vp $BASEDIR
+  fi
+
+  cd $BASEDIR
+
+  if [ ! -d $DIR ]; then
+    git clone $URL $INTENT
+    cd $DIR
+    ./$DEPLOYDIR/init.sh
+  fi
+
+  cd $DIR
+  export FORCE=yes
+  exec ./$DEPLOYDIR/update.sh
+end script

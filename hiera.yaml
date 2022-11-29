@@ -1,0 +1,9 @@
+---
+:hierarchy:
+  - "%{::clientcert}"
+  - common
+:backends:
+  - yaml
+:yaml:
+  :datadir: /etc/puppet/hiera
+:logger: puppet

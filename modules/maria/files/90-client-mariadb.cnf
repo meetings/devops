@@ -1,0 +1,5 @@
+# Make client use TCP by default
+
+[client]
+port     = 3306
+protocol = tcp

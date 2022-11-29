@@ -1,0 +1,18 @@
+# interfaces(5) configuration for the main network
+
+auto br0
+
+allow-ovs br0
+iface br0 inet static
+    address {{ network.public.addr }}
+    netmask {{ network.public.mask }}
+    gateway {{ network.public.gw }}
+    ovs_type OVSBridge
+    ovs_ports {{ network.dev }}
+    # up ip route add {{ network.public.net }} dev br0
+    # up route add -net 46.4.71.224 netmask 255.255.255.224 gw 46.4.71.225 eth0
+
+allow-br0 {{ network.dev }}
+iface {{ network.dev }} inet manual
+    ovs_type OVSPort
+    ovs_bridge br0

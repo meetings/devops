@@ -1,0 +1,7 @@
+---
+#! FIXME common::apt::unattended_upgrades: false
+
+maria::multimaster::server_id:       2
+maria::multimaster::auto_increment:  2
+maria::multimaster::inc_offset:      2
+maria::multimaster::binlog_expire:   31

@@ -1,0 +1,6 @@
+---
+- name: refresh database
+  command: postmap /etc/postfix/passwd
+
+- name: restart postfix
+  service: name=postfix state=restarted

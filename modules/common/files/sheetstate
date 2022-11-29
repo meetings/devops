@@ -1,0 +1,23 @@
+#!/bin/bash
+
+exit
+
+. /etc/lsb-release
+
+DOM0=$(whereami) ## FIXME broken
+DISK=$(df / | awk 'NR>1 {print $5}')
+CORE=$(grep -c processor /proc/cpuinfo)
+MEM=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
+PUP=$(cat /etc/puppet/lastrun 2>/dev/null)
+LAST=$(date +%F)
+TIME=$(uptime | awk '/days/ {print $3}')
+
+## FIXME broken, I think
+which xl >/dev/null && XENMEM=$(xl info | awk '/free_memory/ {print $3}')
+
+echo "https://meetings-gapier.appspot.com/add_or_update_row" \
+  --data-urlencode "worksheet_token=machinae:poceqarokeaslegy" \
+  --data-urlencode "match_columns=Hostname" \
+  --data-urlencode "match_values=$(hostname)" \
+  --data-urlencode "set_columns=dom0,codename,du,cores,mem,xenmem,puppeted,update,uptime" \
+  --data-urlencode "set_values=${DOM0:-unknown},$DISTRIB_CODENAME,$DISK,$CORE,$MEM,${XENMEM:-},${PUP:-?},$LAST,${TIME:-0}" &>/dev/null

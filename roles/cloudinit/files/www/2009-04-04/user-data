@@ -1,0 +1,20 @@
+#cloud-config
+# vim: ft=yaml :
+
+users:
+- name: tuomas
+  primary-group: users
+  groups: adm
+  lock_passwd: false
+  shell: "/bin/bash"
+  sudo: "ALL = (ALL) NOPASSWD: ALL"
+  ssh-authorized-keys:
+  - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOY5VqVVU5EWTGkVkVQP2sKlmk0jHWugn3z7/NnOk8af tuomas@starck.fi"
+  passwd: "$6$nAzpjfvAAJNUFxH$xeGh98Mlqm.zo8enWM38j7.mqQkn4HXV.urn3Nx6R5ovNI4SXmw4eMBU4NPot2JYloIRx2T2N8xbDFbEhbKMK."
+
+package_upgrade: true
+
+packages:
+- python
+- python-apt
+- qemu-guest-agent

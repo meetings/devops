@@ -1,0 +1,15 @@
+# Let GRE packets through and mark ipsec traffic
+# (1 means IPSec and 0 is unencrypted).
+
+table filter {
+  chain INPUT {
+    proto gre ACCEPT;
+  }
+}
+
+table mangle {
+  chain PREROUTING {
+    proto esp MARK set-mark 1;
+    proto udp dport 4500 MARK set-mark 1;
+  }
+}

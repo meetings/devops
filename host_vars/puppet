@@ -1,0 +1,10 @@
+---
+hostname: puppet
+
+with_ferm:
+- puppet
+
+custom_packages:
+- git
+- dnsutils
+- puppetmaster-passenger

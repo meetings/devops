@@ -1,0 +1,7 @@
+
+.ansible_vault
+
+/doc/*.html
+
+/lastrun
+cgi/githupdate*

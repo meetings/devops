@@ -1,0 +1,24 @@
+# /etc/memcached.conf
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+
+# Run memcached as a daemon.
+-d
+
+# Log target.
+logfile /var/log/memcached.log
+
+# Verbosity level.
+-v
+# -vv
+
+# Memory usage limit.
+-m <%= @mem %>
+
+# Listening address and port.
+-l 127.0.0.1
+-p 11211
+
+# Run as user.
+-u memcache

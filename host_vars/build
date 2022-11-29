@@ -1,0 +1,26 @@
+---
+hostname: build
+
+custom_packages:
+# basics
+- git
+- build-essential
+- debhelper
+- devscripts
+- reprepro
+# fpm
+- ruby-dev
+- cpanminus
+# business-paypal-nvp
+- libssl-dev
+# xml-liberal
+- libxml2-dev
+# liblog-log4perl-appender-raven-perl
+- liblog-any-adapter-log4perl-perl
+# libsentry-raven-perl
+- libtest-warn-perl
+- libtest-lwp-useragent-perl
+# new in xenial
+- libcache-memcached-getparserxs-perl
+- libnumber-phone-perl
+- libdatetime-timezone-perl

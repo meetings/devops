@@ -1,0 +1,13 @@
+---
+def_group: users
+def_groups: adm,sudo,plugdev
+def_shell: /bin/bash
+def_sudoers_tag: NOPASSWD
+
+administrators:
+- name: tuomas
+  real: Tuomas Starck
+  grps: "{{ admin_groups | default(def_groups) }}"
+- name: amv
+  real: Antti Vähäkotamäki
+  grps: "{{ admin_groups | default(def_groups) }}"

@@ -1,0 +1,54 @@
+---
+- name: configure dhcpd init script
+  copy:
+    mode: 0644
+    src: isc-dhcp-server
+    dest: /etc/default/isc-dhcp-server
+  notify: restart dhcpd
+
+- name: configure ISC dhcp server
+  template:
+    mode: 0644
+    src: dhcpd.conf.j2
+    dest: /etc/dhcp/dhcpd.conf
+  notify: restart dhcpd
+
+- name: configure local zone
+  copy:
+    mode: 0644
+    owner: root
+    group: bind
+    src: "{{ item }}"
+    dest: "/etc/bind/{{ item }}"
+  with_items:
+  - db.192.168.1
+  - db.meetin.gs
+  - named.conf.local
+  notify: restart bind
+
+- name: symlink the zone files
+  command: >
+    ln -s /etc/bind/{{ item }} {{ item }}
+  args:
+    chdir: /var/cache/bind
+    creates: "{{ item }}"
+  with_items:
+  - db.192.168.1
+  - db.meetin.gs
+  notify: restart bind
+
+- name: create ddns key file
+  template:
+    mode: 0640
+    owner: root
+    group: "{{ item.group }}"
+    src: ddns.key.j2
+    dest: "{{ item.dest }}"
+  with_items:
+  - group: bind
+    dest: /etc/bind/ddns.key
+  - group: dhcpd
+    dest: /etc/dhcp/ddns.key
+  notify:
+  - restart bind
+  - restart dhcpd

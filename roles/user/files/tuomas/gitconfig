@@ -1,0 +1,16 @@
+
+[user]
+  name = Tuomas Starck
+  email = dev@starck.fi
+
+[color]
+  branch = auto
+  diff = auto
+  status = auto
+  interactive = auto
+
+[alias]
+  s       = status -bs
+  indexed = diff --cached
+  full    = pull --ff-only
+  lol     = log --graph --decorate --oneline

@@ -1,0 +1,32 @@
+---
+- name: configure nginx
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+  notify: restart nginx
+
+- name: configure bloonix WebGUI service
+  copy:
+    dest: /etc/nginx/conf.d/bloonix.conf
+    content: >
+      include /etc/bloonix/webgui/nginx.conf;
+  notify: restart nginx
+
+- name: check if the init has been done before
+  stat: path={{ es_pg_init_flag }}
+  register: flagfile
+
+- name: create the init flag
+  file: path={{ es_pg_init_flag }} state=touch
+
+- name: initialize postgresql database
+  command: >
+    /srv/bloonix/webgui/schema/init-database --postgres
+  when: not flagfile.stat.exists
+  notify: enable webgui
+
+- name: initialize elasticsearch schema
+  command: >
+    /srv/bloonix/webgui/schema/init-elasticsearch localhost:9200
+  when: not flagfile.stat.exists
+  notify: enable webgui

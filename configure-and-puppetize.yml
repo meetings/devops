@@ -1,0 +1,11 @@
+---
+- name: do initial virtual machine configuration and run puppet
+  hosts: "{{ vm_name }}"
+  become: true
+
+  roles:
+  - role: hostname
+  - role: apt
+  - role: ferm
+  - role: postfix
+  - role: puppet

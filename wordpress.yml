@@ -1,0 +1,39 @@
+---
+- name: install highly available Wordpress
+  hosts: "{{ wp_hosts }}"
+  become: true
+
+  vars:
+    wp:
+      root: /var/www/wordpress
+      download_url: https://wordpress.org/latest.tar.gz
+
+  roles:
+  - role: hostname
+  - role: apt
+  - role: ferm
+  - role: user
+  # role: postfix
+  - role: gluster
+  - role: wordpress
+
+  tasks:
+  - name: install wordpress
+    run_once: true
+    unarchive:
+      copy: false
+      group: www-data
+      owner: www-data
+      dest: /var/www
+      src: "{{ wp.download_url }}"
+      creates: "{{ wp.root }}/wp-content/index.php"
+    notify: configure wordpress
+
+  handlers:
+  - name: configure wordpress
+    template:
+      mode: 0644
+      group: www-data
+      owner: www-data
+      src: template/wp-config.php.j2
+      dest: /var/www/wordpress/wp-config.php

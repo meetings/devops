@@ -1,0 +1,18 @@
+// named.conf.local
+// vim: set ts=8 nolist ft=named :
+
+include "/etc/bind/ddns.key";
+
+zone "meetin.gs" {
+	type master;
+	notify no;
+	file "/var/cache/bind/db.meetin.gs";
+	allow-update { key DDNS_UPDATE; };
+};
+
+zone "1.168.192.in-addr.arpa" {
+	type master;
+	notify no;
+	file "/var/cache/bind/db.192.168.1";
+	allow-update { key DDNS_UPDATE; };
+};

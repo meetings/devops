@@ -1,0 +1,6 @@
+# see interfaces(5) for details
+
+auto lo
+iface lo inet loopback
+
+source /etc/network/interfaces.d/*

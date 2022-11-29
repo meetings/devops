@@ -1,0 +1,3 @@
+---
+- name: update ferm
+  command: /usr/sbin/ferm /etc/ferm/ferm.conf

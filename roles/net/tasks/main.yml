@@ -1,0 +1,35 @@
+---
+- name: configure system variables
+  template:
+    mode: 0644
+    src: sysctl.conf.j2
+    dest: /etc/sysctl.conf
+  when: with_sysctl is defined
+
+- name: configure interfaces
+  copy:
+    mode: 0644
+    src: interfaces
+    dest: /etc/network/interfaces
+
+- name: configure bridges
+  template:
+    mode: 0644
+    src: "{{ item }}.j2"
+    dest: "/etc/network/interfaces.d/{{ item }}"
+  with_items:
+  - br0
+  - int0
+
+- name: delete existing bridges
+  lineinfile:
+    dest=/etc/default/openvswitch-switch
+    regexp="^[#\s]*OVS_CTL_OPTS="
+    line="OVS_CTL_OPTS=\"--delete-bridges\""
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: repair broken systemd openvswitch service
+  copy:
+    mode: 0644
+    src: openvswitch-nonetwork.service
+    dest: /lib/systemd/system/openvswitch-nonetwork.service

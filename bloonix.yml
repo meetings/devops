@@ -1,0 +1,12 @@
+---
+- name: set up Bloonix server and web interface
+  hosts: "{{ vm_name }}"
+  become: true
+
+  roles:
+  - role: hostname
+  - role: apt
+  - role: ferm
+  - role: puppet
+  - role: postfix
+  - role: bloonix

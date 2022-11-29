@@ -1,0 +1,33 @@
+#!/bin/bash
+#
+# 2013-03-24 / Meetin.gs
+#
+# Send a SMS alert and also log to syslog. If sms fails, error is
+# reported to syslog. No output is written to stdout or stderr.
+#
+# Usage: sms <message>
+
+URL="https://api.twilio.com/2010-04-01/Accounts/x/SMS/Messages.json"
+USER="x"
+NUMBERS="x"
+
+end() {
+    sudo logger -t sms -p local0.alert "$(hostname): $@"
+    exit 1
+}
+
+please_do_send_a_sms_for_me() {
+    for N in $NUMBERS; do curl \
+        --data-urlencode "From=x" \
+        --data-urlencode "To=${N}" \
+        --data-urlencode "Body=ALERT: $(hostname): $@" \
+        -m 12 -s -u ${USER} -X "POST" "${URL}" &>/dev/null || \
+        end "curl failed, exit with $?"
+    done
+}
+
+[ -z "$@" ] && end "missing message"
+
+please_do_send_a_sms_for_me "$@"
+
+exit 0

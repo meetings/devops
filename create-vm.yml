@@ -1,0 +1,39 @@
+---
+- name: define and start a new VM
+  hosts: "{{ vm_host }}"
+  become: false
+
+  tasks:
+  - name: get VM state
+    command: virsh domstate {{ vm_name }}
+    register: vm_state
+    changed_when: false
+    ignore_errors: true
+  - fail: msg="VM called {{ vm_name }} exists"
+    when: vm_state.rc is defined and vm_state.rc == 0
+
+  - name: create a volume
+    command: >
+      virsh vol-create-as {{ virt.pool_name }} {{ vm_name }} {{ vm_vol_size }} --format raw
+    args:
+      creates: "{{ virt.volume_path }}"
+
+  - name: initialize volume with an image
+    command: >
+      virsh -k0 vol-upload --pool {{ virt.pool_name }} {{ vm_name }} {{ virt.image_path }}
+
+  - name: define a VM
+    virt:
+      name: "{{ vm_name }}"
+      command: define
+      xml: "{{ lookup('template', 'template/vm-template.xml.j2') }}"
+      uri: qemu:///system
+    register: def
+
+  - debug: var=def
+
+  - name: start the VM
+    virt:
+      name: "{{ vm_name }}"
+      state: running
+      uri: qemu:///system

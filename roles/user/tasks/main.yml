@@ -1,0 +1,36 @@
+---
+- name: create and configure user accounts
+  user:
+    name: "{{ item.name }}"
+    comment: "{{ item.real }}"
+    group: "{{ item.group | default(def_group) }}"
+    groups: "{{ item.grps | default(def_groups) }}"
+    shell: "{{ item.shell | default(def_shell) }}"
+  with_items: "{{ administrators }}"
+
+- name: inject authorized keys
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ lookup('file', item.name + '.pub') }}"
+  with_items: "{{ administrators }}"
+  when: not ansible_check_mode
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: promote users to admin privileges
+  template:
+    mode: 0440
+    src: sudoers.j2
+    dest: "/etc/sudoers.d/{{ item.name }}"
+  with_items: "{{ administrators }}"
+
+- name: improve shell experience
+  copy:
+    mode: 0644
+    owner: tuomas
+    group: users
+    src: "tuomas/{{ item }}"
+    dest: "/home/tuomas/.{{ item }}"
+  with_items:
+  - bash_aliases
+  - gitconfig
+  - selected_editor

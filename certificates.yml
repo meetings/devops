@@ -1,0 +1,7 @@
+---
+- name: install certificates
+  hosts: "{{ vm_name }}"
+  become: true
+
+  roles:
+  - role: certificate

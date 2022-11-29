@@ -1,0 +1,12 @@
+# /etc/default/mogstored:
+#
+# Set the Mogile storage user and open file limits.
+#
+# This file is managed and overwritten by both
+# debconf(1) and puppet(8). Brace yourselves.
+
+MOGSTORED_RUNASUSER=mogstored
+RUNASUSER=mogstored
+
+ulimit -Hn 20480
+ulimit -Sn 10240

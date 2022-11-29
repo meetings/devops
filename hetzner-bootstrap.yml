@@ -1,0 +1,7 @@
+---
+- name: bootstrap a Hetzner server from rescue mode
+  hosts: "{{ hostname }}"
+  remote_user: root
+
+  roles:
+  - role: bootstrap

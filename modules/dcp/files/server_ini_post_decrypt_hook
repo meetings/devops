@@ -1,0 +1,7 @@
+#!/bin/bash
+
+FILE=${1:-}
+
+if [ "$FILE" == "/usr/local/dcp/conf/server.ini" ]; then
+    /opt/meetings/dcp/bin/update_static_file_version_from_git
+fi

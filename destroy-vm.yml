@@ -1,0 +1,31 @@
+---
+- name: destroy a VM and delete its resources
+  hosts: "{{ vm_host }}"
+  become: false
+
+  tasks:
+  - name: shutdown the VM
+    virt:
+      name: "{{ vm_name }}"
+      state: shutdown
+      uri: qemu:///system
+    register: halt
+
+  - debug: var=halt
+
+  - pause:
+      seconds: 9
+      prompt: "Waiting for the VM to shutdown"
+    when: halt.changed
+
+  - name: remove VM configuration
+    virt:
+      name: "{{ vm_name }}"
+      command: undefine
+      uri: qemu:///system
+
+  - name: delete VM volume
+    command: >
+      virsh vol-delete {{ vm_name }} --pool {{ virt.pool_name }}
+    args:
+      removes: "{{ virt.volume_path }}"

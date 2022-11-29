@@ -1,0 +1,5 @@
+# Allow log aggregation
+
+table filter chain INPUT {
+  proto udp dport 1514 ACCEPT;
+}

@@ -1,0 +1,13 @@
+# /etc/cron.d/meetings_workers
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+@reboot        root  /opt/meetings/dcp/bin/restart_domain_workers
+
+*/3  *  * * *  root  /usr/local/bin/run_logging_workers.sh work_on_fg
+*/5  *  * * *  root  /usr/local/bin/run_logging_workers.sh work_on_bg
+*/10 *  * * *  root  /usr/local/bin/run_logging_workers.sh work_on_ag

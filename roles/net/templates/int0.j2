@@ -1,0 +1,24 @@
+# interfaces(5) configuration for the integration network
+
+auto int0
+
+allow-ovs int0
+iface int0 inet static
+    address {{ network.int.addr }}
+    netmask {{ network.int.mask }}
+    broadcast {{ network.int.bcast }}
+    ovs_type OVSBridge
+{% if network.remote_addresses %}
+    ovs_ports{% for tun in network.remote_addresses %} {{ tun.port }}{% endfor %}
+
+{% endif %}
+    ovs_extra set bridge ${IFACE} stp_enable=true
+    mtu 1462
+{% for tun in network.remote_addresses %}
+
+allow-int0 {{ tun.port }}
+iface {{ tun.port }} inet manual
+    ovs_type OVSPort
+    ovs_bridge int0
+    ovs_extra set interface ${IFACE} type=ipsec_gre options:remote_ip={{ tun.addr }} options:psk={{ ipsec_psk }}
+{% endfor %}

@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# 2013-07-09 / Meetin.gs
+#
+# Wrapper for check scripts. If check script spits out an error (i.e.
+# anything) on two separate runs, a text message is sent.
+#
+# Usage: wrap <check> <message>
+# Where:
+#  <check>    The check (any valid command). If it returns an error or
+#             prints anything, alert is sent. Quotes must be used, if
+#             arguments are provided.
+#  <message>  Custom message hopefully providing useful information to
+#             remedy the problem. Must be short enough to fit in a text
+#             message.
+
+SCRIPT=${1}
+NAME=$(basename $0)
+ID=$(echo $SCRIPT | md5sum | awk '{print $1}')
+OUT=$(mktemp)
+ERR=$(mktemp)
+PATH=$PATH:/usr/local/bin:/usr/local/sbin
+
+shift
+
+# Run check and test if it exited with an error or print any output
+#
+${SCRIPT} >$OUT 2>$ERR; EXITCODE=$?
+if [ $EXITCODE -ne 0 -o -s $OUT -o -s $ERR ]; then
+    # Print errors and condition so that cron(8) can send mail.
+    #
+    echo "[ALERT]"
+    echo "$SCRIPT (exit with $EXITCODE)"
+    echo "Message: ${@:--}"
+    echo
+    echo "[STDOUT]"
+    cat $OUT
+    echo
+    echo "[STDERR]"
+    cat $ERR
+
+    # Log the problem and hope someone reads logs.
+    #
+    sudo logger -t alert -p local0.alert "${@:-$SCRIPT}"
+
+    # Only send sms, if this was even error.
+    #
+    if [ -e /tmp/${NAME}.${ID} ]; then
+        sms "${@:-$SCRIPT}"
+        rm -f /tmp/${NAME}.${ID}
+    else
+        touch /tmp/${NAME}.${ID}
+    fi
+else
+    rm -f /tmp/${NAME}.${ID}
+fi
+
+rm -f $OUT $ERR
+
+exit 0

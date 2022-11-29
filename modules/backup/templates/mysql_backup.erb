@@ -1,0 +1,11 @@
+# /etc/cron.d/mysql_backup
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+<%= @dev_cron  %>  root  /usr/local/bin/mysql_backup.sh dev-mysql    3301
+<%= @blog_cron %>  root  /usr/local/bin/mysql_backup.sh blog-mysql-2 3302 --master-data=2
+<%= @main_cron %>  root  /usr/local/bin/mysql_backup.sh mm-mysql-6   3303 --master-data=2 yes

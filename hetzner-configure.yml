@@ -1,0 +1,14 @@
+---
+- name: provision a Hetzner server after bootstrap
+  hosts: "{{ hostname }}"
+  remote_user: root
+
+  roles:
+  # role: debootstrap
+  # role: apt
+  - role: net
+  - role: ferm
+  - role: time
+  - role: user
+  # role: virt
+  # { role: puppet, skip_puppet: true }

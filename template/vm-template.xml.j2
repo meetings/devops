@@ -1,0 +1,69 @@
+<domain type='kvm'>
+  <name>{{ vm_name }}</name>
+
+  <cpu mode='host-model'></cpu>
+  <vcpu placement='static'>{{ vm_vcpus }}</vcpu>
+  <memory unit='MiB'>{{ vm_memory }}</memory>
+
+  <os>
+    <type arch='x86_64' machine='pc-i440fx-xenial'>hvm</type>
+    <boot dev='hd'/>
+  </os>
+
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>restart</on_crash>
+
+  <pm>
+    <suspend-to-mem enabled='no'/>
+    <suspend-to-disk enabled='no'/>
+  </pm>
+
+  <features>
+    <acpi/>
+    <apic/>
+  </features>
+
+  <clock offset='utc'>
+    <timer name='rtc' tickpolicy='catchup'/>
+    <timer name='pit' tickpolicy='delay'/>
+    <timer name='hpet' present='no'/>
+  </clock>
+
+  <devices>
+    <emulator>/usr/bin/kvm-spice</emulator>
+
+    <disk type='block' device='disk'>
+      <target dev='vda' bus='virtio'/>
+      <source dev='{{ virt.volume_path }}'/>
+      <driver name='qemu' type='raw' cache='none' io='native'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
+    </disk>
+
+    <interface type='network'>
+      <source network='vir0'/>
+      <model type='virtio'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
+    </interface>
+
+    <serial type='pty'>
+      <target port='0'/>
+    </serial>
+
+    <input type='mouse' bus='ps2'/>
+    <input type='keyboard' bus='ps2'/>
+
+    <console type='pty'>
+      <target type='serial' port='0'/>
+    </console>
+
+    <channel type='unix'>
+      <target type='virtio' name='org.qemu.guest_agent.0'/>
+    </channel>
+
+    <video>
+      <model type='qxl' ram='65536' vram='65536' vgamem='16384' heads='1'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/>
+    </video>
+  </devices>
+</domain>

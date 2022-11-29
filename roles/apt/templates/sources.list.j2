@@ -1,0 +1,3 @@
+deb {{ apt_mirror }} {{ ansible_lsb.codename }} main {{ with_components }}
+deb {{ apt_mirror }} {{ ansible_lsb.codename }}-updates main {{ with_components }}
+deb http://security.ubuntu.com/ubuntu {{ ansible_lsb.codename }}-security main {{ with_components }}

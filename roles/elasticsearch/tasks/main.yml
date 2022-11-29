@@ -1,0 +1,6 @@
+---
+- name: make elasticsearch listen to loopback only
+  lineinfile:
+    line: "network.host: 127.0.0.1"
+    dest: /etc/elasticsearch/elasticsearch.yml
+  notify: ensure elasticsearch

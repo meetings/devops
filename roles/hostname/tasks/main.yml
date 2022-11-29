@@ -1,0 +1,10 @@
+---
+- name: configure hostname
+  copy:
+    dest: /etc/hostname
+    content: >
+      {{ hostname | default(inventory_hostname) }}
+
+- name: set hostname
+  hostname:
+    name: "{{ hostname | default(inventory_hostname) }}"

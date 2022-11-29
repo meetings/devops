@@ -1,0 +1,14 @@
+---
+- name: configure timezone to UTC
+  copy:
+    dest: /etc/timezone
+    content: |
+      Etc/UTC
+  notify: reconfigure timezone
+
+- name: set timezone to UTC
+  file:
+    state: link
+    src: /usr/share/zoneinfo/Etc/UTC
+    dest: /etc/localtime
+  notify: set timezone

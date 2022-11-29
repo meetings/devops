@@ -1,0 +1,5 @@
+# Allow http from everywhere
+
+table filter chain INPUT {
+  proto tcp dport http ACCEPT;
+}

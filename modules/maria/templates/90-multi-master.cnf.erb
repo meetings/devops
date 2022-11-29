@@ -1,0 +1,15 @@
+# Multi-master configuration for MariaDB server
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+
+[mariadb]
+bind-address             = 0.0.0.0
+server-id                = <%= @server_id %>
+
+log-bin
+log-basename             = mariadb-<%= @server_id %>
+expire-logs-days         = <%= @binlog_expire %>
+
+auto-increment-increment = <%= @auto_increment %>
+auto-increment-offset    = <%= @inc_offset %>

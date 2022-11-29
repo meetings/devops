@@ -1,0 +1,5 @@
+# Allow access to puppetmaster
+
+table filter chain INPUT {
+  proto tcp dport 8140 ACCEPT;
+}

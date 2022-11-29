@@ -1,0 +1,89 @@
+server {
+    listen 80;
+    listen 443;
+
+    ssl_certificate     /etc/ssl/private/meetings.pem;
+    ssl_certificate_key /etc/ssl/private/meetings.pem;
+
+    server_name platform.meetin.gs;
+
+    underscores_in_headers on;
+
+    location ~ ^/apigw/(.*)$ {
+      proxy_connect_timeout       300s;
+      proxy_send_timeout          300s;
+      proxy_read_timeout          300s;
+      send_timeout                300s;
+      proxy_set_header Host $host;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_pass http://live_api_pool/$1$is_args$args;
+    }
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://websites_pool;
+    }
+}
+
+server {
+    listen 80;
+    listen 443;
+
+    ssl_certificate     /etc/ssl/private/meetings.pem;
+    ssl_certificate_key /etc/ssl/private/meetings.pem;
+
+    server_name platform-beta.meetin.gs;
+
+    underscores_in_headers on;
+
+    location ~ ^/apigw/(.*)$ {
+      proxy_connect_timeout       300s;
+      proxy_send_timeout          300s;
+      proxy_read_timeout          300s;
+      send_timeout                300s;
+      proxy_set_header Host $host;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_pass http://beta_api_pool/$1$is_args$args;
+    }
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://websites_pool;
+    }
+}
+
+server {
+    listen 80;
+    listen 443;
+
+    ssl_certificate     /etc/ssl/private/meetings.pem;
+    ssl_certificate_key /etc/ssl/private/meetings.pem;
+
+    server_name platform-dev.meetin.gs;
+
+    underscores_in_headers on;
+
+    location ~ ^/apigw/(.*)$ {
+      proxy_connect_timeout       300s;
+      proxy_send_timeout          300s;
+      proxy_read_timeout          300s;
+      send_timeout                300s;
+      proxy_set_header Host $host;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_pass http://dev_api_pool/$1$is_args$args;
+    }
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://websites_pool;
+    }
+}

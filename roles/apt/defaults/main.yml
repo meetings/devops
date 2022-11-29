@@ -1,0 +1,3 @@
+---
+apt_mirror: http://mirror.hetzner.de/ubuntu/packages
+meetings_mirror: http://ns1.meetin.gs/ubuntu

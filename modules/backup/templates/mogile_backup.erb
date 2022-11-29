@@ -1,0 +1,12 @@
+# /etc/cron.d/mogile_backup
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+<%= @dev1_cron  %>  root  /usr/local/bin/mogile_backup.sh dev-mogile-1
+<%= @dev2_cron  %>  root  /usr/local/bin/mogile_backup.sh dev-mogile-2
+<%= @live1_cron %>  root  /usr/local/bin/mogile_backup.sh live-mogile-1
+<%= @live2_cron %>  root  /usr/local/bin/mogile_backup.sh live-mogile-2

@@ -1,0 +1,4 @@
+upstream live_http_core_pool {
+    server 10.0.0.1:20230;
+    server 10.0.0.1:20231;
+}

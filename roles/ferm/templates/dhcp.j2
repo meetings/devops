@@ -1,0 +1,5 @@
+# Allow access to dhcpd
+
+table filter chain INPUT {
+  proto udp dport 67 ACCEPT;
+}

@@ -1,0 +1,5 @@
+# Allow https from everywhere
+
+table filter chain INPUT {
+  proto tcp dport https ACCEPT;
+}

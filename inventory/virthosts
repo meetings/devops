@@ -1,0 +1,8 @@
+# Meetin.gs static inventory
+
+[localhost]
+localhost ansible_connection=local
+
+[virthosts]
+savu.dicole.com
+pilvi.dicole.com

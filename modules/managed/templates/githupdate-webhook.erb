@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cat > /dev/null
+
+echo Content-Type: text/plain
+echo
+
+sudo /sbin/initctl emit --no-wait githupdate-<%= @intent %> || \
+  sudo logger -t githupdate -p local0.err "failed webhook for <%= @intent %>"

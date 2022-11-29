@@ -1,0 +1,51 @@
+server {
+    listen 80;
+    listen 443;
+    server_name www.meetin.gs matchmaking.meetin.gs chrome.meetin.gs register.meetin.gs register-to-slush.meetin.gs;
+
+    ssl_certificate     /etc/ssl/private/meetings.pem;
+    ssl_certificate_key /etc/ssl/private/meetings.pem;
+
+    location / {
+        proxy_connect_timeout       300s;
+        proxy_send_timeout          300s;
+        proxy_read_timeout          300s;
+        send_timeout                300s;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://live_blog_pool;
+    }
+}
+
+server {
+    listen 80;
+    server_name meetingsapp.com www.dicole.com www.taloushallinnonrunkoverkko.fi swipetomeet.com biohackersummit.com upgradedlifefestival.com digibarometri.fi digi.fi fisc.fi ict2015.fi biohakkerit.fi site.biohakkerit.fi quantifiedself.fi tarina.me rajanto.fi www.rajanto.fi;
+
+    location / {
+        proxy_connect_timeout       300s;
+        proxy_send_timeout          300s;
+        proxy_read_timeout          300s;
+        send_timeout                300s;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://live_blog_pool;
+    }
+}
+
+server {
+    listen 80;
+    server_name biohackingbook.com flic.fi kurssi.biohakkerit.fi courses.biohacker.center;
+
+    location / {
+        proxy_connect_timeout       300s;
+        proxy_send_timeout          300s;
+        proxy_read_timeout          300s;
+        send_timeout                300s;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://live_wpmu_pool;
+    }
+}

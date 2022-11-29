@@ -1,0 +1,7 @@
+# Configuration for gearman-job-server
+# For details, see http://gearman.org/index.php?id=manual:job_server
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+
+PARAMS="-L 127.0.0.1"

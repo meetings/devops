@@ -1,0 +1,17 @@
+---
+# wordpress_root: /var/www/wordpress
+# wordpress_download: https://wordpress.org/latest.tar.gz
+
+nginx_worker_conn: 512
+
+max_upload_size: 12
+
+php_ini:
+- key: upload_max_filesize
+  val: "{{ max_upload_size }}M"
+- key: post_max_size
+  val: "{{ max_upload_size }}M"
+
+# php_fpm_conf:
+# - key:
+#   val:

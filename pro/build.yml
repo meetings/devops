@@ -1,0 +1,6 @@
+---
+vm_name: build
+vm_host: savu.dicole.com
+vm_vcpus: 4
+vm_memory: 2048
+vm_vol_size: 8589934592

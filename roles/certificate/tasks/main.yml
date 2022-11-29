@@ -1,0 +1,13 @@
+---
+- name: copy Meetin.gs certificate
+  copy:
+    mode: 0400
+    content: "{{ cert_meetin_gs }}"
+    dest: /etc/ssl/private/meetings.pem
+
+- name: copy Dicole.net certificate
+  copy:
+    mode: 0400
+    content: "{{ cert_dicole_net }}"
+    dest: /etc/ssl/private/dicolenet.pem
+

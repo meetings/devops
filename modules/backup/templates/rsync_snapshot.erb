@@ -1,0 +1,19 @@
+# /etc/cron.d/rsync_snapshot
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+<%= @blog1_cron  %> 2-31 * *  root  /usr/local/bin/rsync_snapshot.sh daily   live-blog-1    /var/www/
+<%= @blog2_cron  %> 2-31 * *  root  /usr/local/bin/rsync_snapshot.sh daily   live-blog-2    /var/www/
+<%= @media1_cron %> 2-31 * *  root  /usr/local/bin/rsync_snapshot.sh daily   legacy-media-1 /var/www/
+<%= @media2_cron %> 2-31 * *  root  /usr/local/bin/rsync_snapshot.sh daily   legacy-media-2 /var/www/
+
+<%= @blog1_cron  %>   1  * *  root  /usr/local/bin/rsync_snapshot.sh monthly live-blog-1    /var/www/
+<%= @blog2_cron  %>   1  * *  root  /usr/local/bin/rsync_snapshot.sh monthly live-blog-2    /var/www/
+<%= @media1_cron %>   1  * *  root  /usr/local/bin/rsync_snapshot.sh monthly legacy-media-1 /var/www/
+<%= @media2_cron %>   1  * *  root  /usr/local/bin/rsync_snapshot.sh monthly legacy-media-2 /var/www/
+
+<%= @devdcp_cron %> * * * root /usr/local/bin/rsync_snapshot.sh daily dev-dcp /usr/local/src/dicole-crmjournal/

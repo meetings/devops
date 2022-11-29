@@ -1,0 +1,4 @@
+upstream dcp_core_pool {
+    server 10.0.0.1:20061;
+    server 10.0.0.1:20049;
+}

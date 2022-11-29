@@ -1,0 +1,29 @@
+# /etc/varnish/default.vcl
+# Main configuration for Varnish, see vcl(7) for details.
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+
+backend default {
+    .host = "127.0.0.1";
+    .port = "80";
+}
+
+sub vcl_recv {
+    if (req.request == "REFRESH") {
+        set req.request = "GET";
+        set req.hash_always_miss = true;
+    }
+
+    if (req.http.host ~ "^www\.meetin\.gs" && req.url ~ "^/$") {
+        return(lookup);
+    }
+
+    return(pipe);
+}
+
+sub vcl_fetch {
+    set beresp.ttl = 120s;
+
+    return(deliver);
+}

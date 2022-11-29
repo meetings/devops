@@ -1,0 +1,2 @@
+---
+common::apt::unattended_upgrades: false

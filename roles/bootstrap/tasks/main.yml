@@ -1,0 +1,41 @@
+---
+- name: check for rescue mode
+  stat:
+    path: /root/.oldroot/nfs
+  register: nfs
+
+- fail:
+    msg: "rescue mode not detected"
+  when: not nfs.stat.exists
+
+- name: copy installer configuration
+  template:
+    src: installimage.j2
+    dest: /root/inst.conf
+
+- name: execute system installer
+  command: >
+    /root/.oldroot/nfs/install/installimage -ac /root/inst.conf
+
+- name: mount new system root
+  mount:
+    name: /mnt
+    src: /dev/md1
+    fstype: ext4
+    state: mounted
+
+- name: inject custom rc.local
+  copy:
+    src: rc.local
+    dest: /mnt/etc/rc.local
+
+- name: unmount
+  mount:
+    name: /mnt
+    src: /dev/md1
+    fstype: ext4
+    state: unmounted
+
+# name: reboot to the new system
+# command: >
+#   shutdown -r now "Reboot by Ansible"

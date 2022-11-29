@@ -1,0 +1,72 @@
+# /etc/varnish/default.vcl
+# Main configuration for Varnish, see vcl(7) for details.
+#
+# This file is managed and overwritten by Puppet. If you need
+# to make changes, see the Puppetmaster and its configuration.
+
+backend default {
+    .host = "176.9.15.204";
+    .port = "8080";
+    .connect_timeout = 600s;
+    .first_byte_timeout = 600s;
+    .between_bytes_timeout = 600s;
+}
+
+backend meetings_static {
+    .host = "176.9.15.204";
+    .port = "80";
+    .connect_timeout = 600s;
+    .first_byte_timeout = 600s;
+    .between_bytes_timeout = 600s;
+}
+
+backend test_mogile_1 {
+    .host = "127.0.0.4";
+    .port = "7600";
+    .connect_timeout = 600s;
+    .first_byte_timeout = 600s;
+    .between_bytes_timeout = 600s;
+}
+
+backend test_mogile_2 {
+    .host = "127.0.0.5";
+    .port = "7600";
+    .connect_timeout = 600s;
+    .first_byte_timeout = 600s;
+    .between_bytes_timeout = 600s;
+}
+
+sub vcl_recv {
+    if (server.port == 7500) {
+        if (server.ip == "127.0.0.4") {
+            set req.backend = test_mogile_1;
+        }
+        if (server.ip == "127.0.0.5") {
+            set req.backend = test_mogile_2;
+        }
+        return (pipe);
+    }
+
+    if (req.http.host ~ ".*dev\.meetin\.gs$") {
+        return (pass);
+    }
+
+    if (req.http.host ~ ".*meetin\.gs$" && req.url ~ "^/(images|js|css)/") {
+        unset req.http.Cookie;
+        unset req.http.host;
+        set req.http.Host = "uncached.meetin.gs";
+        set req.backend = meetings_static;
+        if (req.url ~ "^/(images|js|css)/.*\?v\=") {
+            return (lookup);
+        }
+        else {
+            return (pass);
+        }
+    }
+}
+
+sub vcl_fetch {
+    if (req.url ~ "^/dev\d+/\d+/") {
+        set beresp.ttl = 3600s;
+    }
+}

@@ -1,0 +1,22 @@
+---
+- name: stop and disable puppet as a service
+  service:
+    name: puppet
+    state: stopped
+    enabled: false
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: enable puppet agent
+  command: >
+    /usr/bin/puppet agent --enable
+  when: not ansible_check_mode
+
+- name: configure puppet
+  template:
+    src: puppet.conf.j2
+    dest: /etc/puppet/puppet.conf
+
+- name: run puppet
+  puppet:
+  ignore_errors: true
+  when: not ansible_check_mode and skip_puppet is undefined

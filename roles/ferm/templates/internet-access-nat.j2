@@ -1,0 +1,10 @@
+# Enable Internet access to virtual machines using
+# classic network address translation.
+
+@def $INT_NET = {{ network.int.net }};
+@def $VIRT_NET = {{ network.virt.net }};
+@def $PUBLIC_IP = {{ network.public.addr }};
+
+table nat chain POSTROUTING {
+  saddr ($INT_NET $VIRT_NET) SNAT to $PUBLIC_IP;
+}

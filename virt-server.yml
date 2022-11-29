@@ -1,0 +1,11 @@
+---
+- name: set up bare iron server to host infrastructure
+  hosts: "{{ virt_host }}"
+  become: true
+
+  roles:
+  - role: hostname
+  - role: apt
+  - role: net
+  - role: ferm
+  # role: user FIXME Do with puppet

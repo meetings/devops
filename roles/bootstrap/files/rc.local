@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+cat >/etc/apt/sources.list <<EOL
+deb http://mirror.hetzner.de/ubuntu/packages xenial main universe
+deb http://mirror.hetzner.de/ubuntu/packages xenial-updates main universe
+deb http://security.ubuntu.com/ubuntu xenial-security main universe
+EOL
+
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get update >/var/log/rclocal.log 2>&1
+apt-get dist-upgrade --yes >>/var/log/rclocal.log 2>&1
+apt-get install --yes python python-apt \
+  python-libvirt python-lxml python-netaddr \
+  zfsutils-linux >>/var/log/rclocal.log 2>&1
+
+exit 0

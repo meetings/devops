@@ -1,0 +1,12 @@
+---
+- name: install fpm
+  command: >
+    gem install fpm
+  args:
+    creates: /usr/local/bin/fpm
+
+- name: make Makefile available
+  become: false
+  copy:
+    src: Makefile
+    dest: Makefile ## FIXME?

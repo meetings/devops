@@ -1,0 +1,14 @@
+### HTTP redirection configuration
+### vi: set syntax=perl :
+
+s%^((\w+:)//((?:[^/]*\-)?test\.meetin\.gs)(:80|:443)?)/apigw(/[^\s]*)?( .*|$)%$1$5 test_api$6% && next;
+s%^(\w+://test\.meetin\.gs(:80|:443)?(/[^\s]*)?)( .*|$)%$1 core$3% && next;
+s%^\w+://meetin\.gs%307:http://test.meetin.gs% && next;
+s%^\w+://cuty\.meetin\.gs(:80|:443)?([\S]*)%http://10.0.0.1:20200/$2% && next;
+
+s%^\w+://staging\.meetin\.gs(:80|:443)?[\S]*%http://10.0.0.1:20179/v1% && next;
+s%^\w+://track\.meetin\.gs(:80|:443)?[\S]*%http://10.0.0.1:20179/v1% && next;
+
+s%^\w+://ubuntu\.meetin\.gs/(.*$)%http://10.0.0.1:29988/testuntu/$1% && next;
+
+s%.*%404:% && next;

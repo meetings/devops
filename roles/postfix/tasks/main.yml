@@ -1,0 +1,26 @@
+---
+- name: set aliases
+  copy:
+    src: aliases
+    dest: /etc/aliases
+  notify: restart postfix
+
+- name: set mailname
+  copy:
+    dest: /etc/mailname
+    content: >
+      dicole.com
+  notify: restart postfix
+
+- name: do the main configuration
+  copy:
+    src: main.cf
+    dest: /etc/postfix/main.cf
+  notify: restart postfix
+
+- name: create the password file
+  template:
+    mode: 0600
+    src: passwd.j2
+    dest: /etc/postfix/passwd
+  notify: refresh database

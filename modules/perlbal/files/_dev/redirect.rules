@@ -1,0 +1,10 @@
+### HTTP redirection configuration
+### vi: set syntax=perl :
+
+s%^(\w+:)//api\-local\.meetin\.gs(:80|:443)?(.*$)%$1//127.0.0.1:8000$3% && next;
+
+s%^(\w+:)//[^/]*local\.meetin\.gs(:80|:443)?/apigw(/.*$)%$1//127.0.0.1:8000$3% && next;
+
+s%^(\w+:)//[^/]*local\.meetin\.gs(:80|:443)?(.*$)%$1//127.0.0.1:8080$3% && next;
+
+s%.*%307:http://media.dicole.com/eeoo% && next;

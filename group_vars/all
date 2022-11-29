@@ -1,0 +1,20 @@
+---
+with_updates: true
+with_components: universe
+
+# FIXME Use variables instead of hardcoded values in everywhere:
+intranet:
+  cloudinit_source: 192.168.1.17
+  hosts: # FIXME rename to nameservers
+  - 192.168.1.17
+  routers:
+  - 192.168.1.1
+  mtu: 1424
+
+baseline_packages:
+- ferm
+- mailutils
+- moreutils
+- postfix
+- puppet
+- vim

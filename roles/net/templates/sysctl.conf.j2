@@ -1,0 +1,11 @@
+# /etc/sysctl.conf(5), configuration for system variables
+{% if with_sysctl.ipv4_forward is defined %}
+
+# Enable IPv4 packet forwarding
+net.ipv4.ip_forward = 1
+{% endif %}
+{% if with_sysctl.swappiness is defined %}
+
+# Control how eager kernel is to use swap
+vm.swappiness = {{ with_sysctl.swappiness }}
+{% endif %}

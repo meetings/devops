@@ -1,0 +1,7 @@
+---
+# USAGE:
+# module::class::variable: value
+
+log::aggregation_addr:
+- log-1.meetin.gs:1514
+# log-2.meetin.gs:1514

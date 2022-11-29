@@ -1,0 +1,3 @@
+# See man 5 aliases for details
+postmaster: root@dicole.com
+root:       root@dicole.com
